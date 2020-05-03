@@ -1,3 +1,5 @@
+USE [master]
+GO
 CREATE DATABASE Kemping
 
 -- Table: Dodatki
