@@ -1,0 +1,159 @@
+CREATE DATABASE Kemping
+
+-- Table: Dodatki
+CREATE TABLE Dodatki (
+    idDodatku int  NOT NULL,
+    idSprzetuWodnego int  NULL,
+    idGrilla int  NULL,
+    CONSTRAINT Dodatki_pk PRIMARY KEY  (idDodatku)
+);
+
+-- Table: Grill
+CREATE TABLE Grill (
+    idGrilla int  NOT NULL,
+    DataWynajmu date  NOT NULL,
+    DataZwrotu date  NOT NULL,
+    CONSTRAINT Grill_pk PRIMARY KEY  (idGrilla)
+);
+
+-- Table: Kajak
+CREATE TABLE Kajak (
+    idKajaku int  NOT NULL,
+    DataWynajmu date  NOT NULL,
+    DataZwrotu date  NOT NULL,
+    CONSTRAINT Kajak_pk PRIMARY KEY  (idKajaku)
+);
+
+-- Table: Klient
+CREATE TABLE Klient (
+    idKlienta int  NOT NULL,
+    Imie nvarchar(30)  NOT NULL,
+    Nazwisko nvarchar(30)  NOT NULL,
+    Pesel nvarchar(11)  NOT NULL,
+    Miasto nvarchar(100)  NOT NULL,
+    KodPocztowy nvarchar(15)  NOT NULL,
+    UlicaLubOsiedle nvarchar(255)  NOT NULL,
+    NumerDomu nvarchar(15)  NOT NULL,
+    NumerTelefonu nvarchar(9)  NOT NULL,
+    Login nvarchar(200)  NOT NULL,
+    Password nvarchar(250)  NOT NULL,
+    CONSTRAINT Klient_pk PRIMARY KEY  (idKlienta)
+);
+
+-- Table: Pole
+CREATE TABLE Pole (
+    idPola int  NOT NULL,
+    RodzajPola nvarchar(25)  NOT NULL,
+    CONSTRAINT Pole_pk PRIMARY KEY  (idPola)
+);
+
+-- Table: Pracownik
+CREATE TABLE Pracownik (
+    idPracownika int  NOT NULL,
+    Imie nvarchar(30)  NOT NULL,
+    Nazwisko nvarchar(30)  NOT NULL,
+    Stanowisko nvarchar(30)  NOT NULL,
+    Miasto nvarchar(100)  NOT NULL,
+    KodPocztowy nvarchar(15)  NOT NULL,
+    UlicaLubOsiedle nvarchar(255)  NOT NULL,
+    NumerDomu nvarchar(15)  NOT NULL,
+    NumerTelefonu nvarchar(9)  NOT NULL,
+    Login nvarchar(200)  NOT NULL,
+    Password nvarchar(250)  NOT NULL,
+    DataUrodzenia date  NOT NULL,
+    CONSTRAINT Pracownik_pk PRIMARY KEY  (idPracownika)
+);
+
+-- Table: Rezerwacja
+CREATE TABLE Rezerwacja (
+    idRezerwacji int  NOT NULL IDENTITY,
+    DataRezerwacji date  NOT NULL,
+    DataZwolnienia date  NOT NULL,
+    Cena money  NOT NULL,
+    idPracownika int  NOT NULL,
+    idKlienta int  NOT NULL,
+    idPola int  NOT NULL,
+    idDodatku int  NULL,
+    CONSTRAINT Rezerwacja_pk PRIMARY KEY  (idRezerwacji)
+);
+
+-- Table: Rodzaje_Pola
+CREATE TABLE Rodzaje_Pola (
+    RodzajPola nvarchar(25)  NOT NULL,
+    CONSTRAINT Rodzaje_Pola_pk PRIMARY KEY  (RodzajPola)
+);
+
+-- Table: RowerWodny
+CREATE TABLE RowerWodny (
+    idRoweruWodnego int  NOT NULL,
+    DataWynajmu date  NOT NULL,
+    DataZwrotu date  NOT NULL,
+    CONSTRAINT RowerWodny_pk PRIMARY KEY  (idRoweruWodnego)
+);
+
+-- Table: SprzetWodny
+CREATE TABLE SprzetWodny (
+    idSprzetuWodnego int  NOT NULL,
+    idRoweruWodnego int  NULL,
+    idKajaku int  NULL,
+    CONSTRAINT SprzetWodny_pk PRIMARY KEY  (idSprzetuWodnego)
+);
+
+-- Table: Stanowiska
+CREATE TABLE Stanowiska (
+    Stanowisko nvarchar(30)  NOT NULL,
+    CONSTRAINT Stanowiska_pk PRIMARY KEY  (Stanowisko)
+);
+
+-- foreign keys
+-- Reference: Dodatki_Grill (table: Dodatki)
+ALTER TABLE Dodatki ADD CONSTRAINT Dodatki_Grill
+    FOREIGN KEY (idGrilla)
+    REFERENCES Grill (idGrilla);
+
+-- Reference: Dodatki_SprzetWodny (table: Dodatki)
+ALTER TABLE Dodatki ADD CONSTRAINT Dodatki_SprzetWodny
+    FOREIGN KEY (idSprzetuWodnego)
+    REFERENCES SprzetWodny (idSprzetuWodnego);
+
+-- Reference: Pole_Rodzaje_Pola (table: Pole)
+ALTER TABLE Pole ADD CONSTRAINT Pole_Rodzaje_Pola
+    FOREIGN KEY (RodzajPola)
+    REFERENCES Rodzaje_Pola (RodzajPola);
+
+-- Reference: Pracownik_Stanowiska (table: Pracownik)
+ALTER TABLE Pracownik ADD CONSTRAINT Pracownik_Stanowiska
+    FOREIGN KEY (Stanowisko)
+    REFERENCES Stanowiska (Stanowisko);
+
+-- Reference: Rezerwacja_Dodatki (table: Rezerwacja)
+ALTER TABLE Rezerwacja ADD CONSTRAINT Rezerwacja_Dodatki
+    FOREIGN KEY (idDodatku)
+    REFERENCES Dodatki (idDodatku);
+
+-- Reference: Rezerwacja_Klient (table: Rezerwacja)
+ALTER TABLE Rezerwacja ADD CONSTRAINT Rezerwacja_Klient
+    FOREIGN KEY (idKlienta)
+    REFERENCES Klient (idKlienta);
+
+-- Reference: Rezerwacja_Pole (table: Rezerwacja)
+ALTER TABLE Rezerwacja ADD CONSTRAINT Rezerwacja_Pole
+    FOREIGN KEY (idPola)
+    REFERENCES Pole (idPola);
+
+-- Reference: Rezerwacja_Pracownik (table: Rezerwacja)
+ALTER TABLE Rezerwacja ADD CONSTRAINT Rezerwacja_Pracownik
+    FOREIGN KEY (idPracownika)
+    REFERENCES Pracownik (idPracownika);
+
+-- Reference: SprzetWodny_Kajak (table: SprzetWodny)
+ALTER TABLE SprzetWodny ADD CONSTRAINT SprzetWodny_Kajak
+    FOREIGN KEY (idKajaku)
+    REFERENCES Kajak (idKajaku);
+
+-- Reference: SprzetWodny_RowerWodny (table: SprzetWodny)
+ALTER TABLE SprzetWodny ADD CONSTRAINT SprzetWodny_RowerWodny
+    FOREIGN KEY (idRoweruWodnego)
+    REFERENCES RowerWodny (idRoweruWodnego);
+
+
